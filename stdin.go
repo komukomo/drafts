@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./slack"
 	"bufio"
 	"fmt"
 	"os"
@@ -15,6 +16,14 @@ func main() {
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintln(os.Stderr, "reading std input:", err)
 	}
+
+	incomingURL := os.Getenv("SLACK_URL")
+	slack.PostSlack(incomingURL, slack.SlackMessage{
+		output,
+		"gobot",
+		"#times_komukomo",
+		":ghost:",
+	})
 
 	fmt.Println(output)
 }
