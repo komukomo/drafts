@@ -5,9 +5,15 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"flag"
 )
 
 func main() {
+	var channel = flag.String("c", "random", "cannel name")
+	var botname = flag.String("n", "gobot", "bot name")
+	var icon = flag.String("i", "ghost", "bot icon. emoji or URL ")
+	flag.Parse()
+
 	scanner := bufio.NewScanner(os.Stdin)
 	var output string
 	for scanner.Scan() {
@@ -20,10 +26,8 @@ func main() {
 	incomingURL := os.Getenv("SLACK_URL")
 	slack.PostSlack(incomingURL, slack.SlackMessage{
 		output,
-		"gobot",
-		"#times_komukomo",
-		":ghost:",
+		*botname,
+		"#" + *channel,
+		":" + *icon + ":",
 	})
-
-	fmt.Println(output)
 }
