@@ -6,15 +6,38 @@ import (
 	"fmt"
 	"os"
 	"flag"
+	"io/ioutil"
+	"encoding/json"
 )
 
-func main() {
-	defaultUrl := os.Getenv("SLACK_URL")
+type Config struct {
+	Url string `json:"url"`
+	Channel string `json:"channel"`
+	Name string `json:"name"`
+	Icon string `json:"icon"`
+}
 
-	var channel = flag.String("c", "random", "cannel name")
-	var botname = flag.String("n", "gobot", "bot name")
-	var icon = flag.String("i", "ghost", "bot icon. emoji or URL ")
-	var incomingURL = flag.String("url", defaultUrl, "bot icon. emoji or URL ")
+func main() {
+	config := Config {
+		os.Getenv("SLACK_URL"),
+		os.Getenv("SLACK_CHANNEL"),
+		os.Getenv("SLACK_ICON"),
+		os.Getenv("SLACK_NAME"),
+	}
+
+	configFile := "./config.json"
+	if exists(configFile) {
+		file, err := ioutil.ReadFile(configFile)
+		if err != nil {
+			panic(err)
+		}
+		json.Unmarshal(file, &config)
+	}
+
+	var channel = flag.String("c", config.Channel, "cannel name")
+	var botname = flag.String("n", config.Name, "bot name")
+	var icon = flag.String("i", config.Icon, "bot icon. emoji or URL ")
+	var incomingURL = flag.String("url", config.Url, "bot icon. emoji or URL ")
 
 	flag.Parse()
 
@@ -33,4 +56,9 @@ func main() {
 		"#" + *channel,
 		":" + *icon + ":",
 	})
+}
+
+func exists(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
 }
