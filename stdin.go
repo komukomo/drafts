@@ -10,20 +10,18 @@ import (
 	"encoding/json"
 )
 
-type Config struct {
-	Url string `json:"url"`
-	Channel string `json:"channel"`
-	Name string `json:"name"`
-	Icon string `json:"icon"`
-}
 
 func main() {
-	config := Config {
+	config := slack.Config {
 		os.Getenv("SLACK_URL"),
 		os.Getenv("SLACK_CHANNEL"),
 		os.Getenv("SLACK_ICON"),
 		os.Getenv("SLACK_NAME"),
 	}
+
+	at := slack.SlackMessage{}
+	atfile, _ := ioutil.ReadFile("./attachments.json")
+	json.Unmarshal(atfile, &at)
 
 	configFile := "./config.json"
 	if exists(configFile) {
@@ -38,25 +36,34 @@ func main() {
 	var botname = flag.String("n", config.Name, "bot name")
 	var icon = flag.String("i", config.Icon, "bot icon. emoji or URL ")
 	var incomingURL = flag.String("url", config.Url, "bot icon. emoji or URL ")
+	var attachmentFlag = flag.Bool("a", true, "attachment format")
 
 	flag.Parse()
 
-	scanner := bufio.NewScanner(os.Stdin)
 	var output string
-	for scanner.Scan() {
-		output += scanner.Text() + "\n"
-	}
-	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "reading std input:", err)
+	if !*attachmentFlag {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			output += scanner.Text() + "\n"
+		}
+		if err := scanner.Err(); err != nil {
+			fmt.Fprintln(os.Stderr, "reading std input:", err)
+		}
 	}
 
-	slack.PostSlack(*incomingURL, slack.SlackMessage{
-		output,
-		*botname,
-		"#" + *channel,
-		":" + *icon + ":",
-	})
+	if *attachmentFlag {
+		slack.PostSlack(*incomingURL, at)
+	} else {
+		slack.PostSlack(*incomingURL, slack.SlackMessage{
+			output,
+			*botname,
+			"#" + *channel,
+			":" + *icon + ":",
+			nil,
+		})
+	}
 }
+
 
 func exists(filename string) bool {
 	_, err := os.Stat(filename)

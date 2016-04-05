@@ -1,0 +1,23 @@
+{
+    "username": "name",
+    "text": "text",
+    "channel": "#times_komukomo",
+    "icon_emoji": ":sushi:",
+    "attachments": [
+        {
+            "fallback": "Required plain-text summary of the attachment.",
+            "color": "#36a64f",
+            "pretext": "Optional text that appears above the attachment block",
+            "author_name": "Bobby Tables",
+            "title": "Slack API Documentation",
+            "text": "Optional text that appears within the attachment",
+            "fields": [
+                {
+                    "title": "Priority",
+                    "value": "High",
+                    "short": false
+                }
+            ]
+        }
+    ]
+}
