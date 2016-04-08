@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"os"
 	"flag"
+	"bytes"
 	"io/ioutil"
 	"encoding/json"
+	"text/template"
 )
 
 
@@ -19,9 +21,9 @@ func main() {
 		os.Getenv("SLACK_NAME"),
 	}
 
-	at := slack.SlackMessage{}
-	atfile, _ := ioutil.ReadFile("./attachments.json")
-	json.Unmarshal(atfile, &at)
+
+	//atfile, _ := ioutil.ReadFile("./attachments.json")
+
 
 	configFile := "./config.json"
 	if exists(configFile) {
@@ -41,15 +43,22 @@ func main() {
 	flag.Parse()
 
 	var output string
-	if !*attachmentFlag {
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			output += scanner.Text() + "\n"
-		}
-		if err := scanner.Err(); err != nil {
-			fmt.Fprintln(os.Stderr, "reading std input:", err)
-		}
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		output += scanner.Text() + "\\n"
 	}
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "reading std input:", err)
+	}
+	var doc bytes.Buffer
+
+
+	at := slack.SlackMessage{}
+	tpl := template.Must(template.ParseFiles("./attachments.json"))
+	mp := map[string]string{"Title": "test", "Contents": output}
+	tpl.Execute(&doc, mp)
+	fmt.Printf("%s", doc.Bytes())
+	json.Unmarshal(doc.Bytes(), &at)
 
 	if *attachmentFlag {
 		slack.PostSlack(*incomingURL, at)
