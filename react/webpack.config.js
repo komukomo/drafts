@@ -1,10 +1,10 @@
 module.exports = {
-  context: __dirname + '/source',
+  context: __dirname + '/src',
   entry: {
     'application': './es2015/application',
   },
   output: {
-    path: __dirname + '/distribution/javascript',
+    path: __dirname + '/dist/javascript',
     filename: '[name].js'
   },
   module: {
