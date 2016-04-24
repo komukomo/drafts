@@ -1,13 +1,8 @@
-import Person from './person';
+import React from "react";
+import ReactDOM from "react-dom";
 
-class Friend extends Person {
-  constructor(name) {
-    super(name);
-  }
-  callName() {
-    alert(this.name);
-  }
-}
+ReactDOM.render(
+  <h1>Hello, world!</h1>,
+  document.getElementById('example')
+);
 
-var friend = new Friend('Chi');
-friend.callName();
