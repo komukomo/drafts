@@ -2,11 +2,33 @@ import hello from "exports?hello!../hoge/hoge";
 import React from "react";
 import ReactDOM from "react-dom";
 
-let CommentBox = React.createClass({displayName: 'CommentBox',
+const CommentBox = React.createClass({
   render: () => {
     return (
       <div className="commentBox">
-        comment comment, comment...
+        <h1>Comments</h1>
+        <CommentList />
+        <CommentForm />
+      </div>
+    );
+  }
+});
+
+const CommentList = React.createClass({
+  render: () => {
+    return (
+      <div className="commentList">
+        commentList...
+      </div>
+    );
+  }
+});
+
+const CommentForm = React.createClass({
+  render: () => {
+    return (
+      <div className="commentForm">
+        commentForm...
       </div>
     );
   }
