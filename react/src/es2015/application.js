@@ -2,18 +2,35 @@ import hello from "exports?hello!../hoge/hoge";
 import React from "react";
 import marked from "marked";
 import ReactDOM from "react-dom";
+import $ from "jquery";
 
-let data = [
-  {id: 1, author: "Pete Hunt", text: "This is one comment"},
-  {id: 2, author: "Jordan Walke", text: "This is *another* comment"}
-];
 
 const CommentBox = React.createClass({
+  getInitialState: function() {
+    return {data: []};
+  },
+  componentDidMount: function() {
+    this.loadCommnetsFromServer();
+    setInterval(this.loadCommnetsFromServer, this.props.pollInterval);
+  },
+  loadCommnetsFromServer: function() {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      cache: false,
+      success: (data) => {
+        this.setState({data: data});
+      },
+      error: (xhr, status, err) => {
+        console.error(this.props.url, status, err.toString());
+      }
+    });
+  },
   render: function() {
     return (
       <div className="commentBox">
         <h1>Comments</h1>
-        <CommentList data={this.props.data} />
+        <CommentList data={this.state.data} />
         <CommentForm />
       </div>
     );
@@ -66,7 +83,7 @@ const CommentForm = React.createClass({
 
 
 ReactDOM.render(
-  <CommentBox data={data} />,
+  <CommentBox url="/data.json" pollInterval={2000} />,
   document.getElementById('example')
 );
 
