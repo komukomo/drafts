@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "webpack-dev-server -d --content-base dist --hot --inline",
     "lint": "eslint",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -33,6 +34,7 @@
     "exports-loader": "^0.6.3",
     "imports-loader": "^0.6.5",
     "redux-devtools": "^3.2.0",
-    "webpack": "^1.13.0"
+    "webpack": "^1.13.0",
+    "webpack-dev-server": "^1.14.1"
   }
 }
