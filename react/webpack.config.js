@@ -1,11 +1,15 @@
+var webpack = require('webpack'),
+    path = require('path');
+
 module.exports = {
   context: __dirname + '/src',
   entry: {
-    'application': './es2015/application',
+    app: './es2015/application',
   },
   output: {
-    path: __dirname + '/dist/javascript',
-    filename: '[name].js'
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: "/assets/",
+    filename: 'bundle.js'
   },
   module: {
     loaders: [
@@ -21,5 +25,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
-  }
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
 };
