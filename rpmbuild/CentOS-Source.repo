@@ -1,0 +1,11 @@
+[base-source]
+name=CentOS-6.5 - Base - Source
+baseurl=http://vault.centos.org/6.5/os/Source/
+gpgcheck=0
+enabled=0
+
+[updates-source]
+name=CentOS-6.5 - Updates - Source
+baseurl=http://vault.centos.org/6.5/updates/Source/
+gpgcheck=0
+enabled=0
